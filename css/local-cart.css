@@ -452,3 +452,69 @@
   background: #001d5f;
 }
 
+/* Стилі для хедера на мобільних */
+.customHeader-section {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  opacity: 1 !important;
+  position: static !important;
+}
+
+.customHeader-inner {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+}
+
+.customHeader-content-mobile {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+}
+
+@media (max-width: 768px) {
+  .customHeader-section {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    opacity: 1 !important;
+    position: static !important;
+  }
+  
+  .customHeader-inner {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    position: static !important;
+  }
+  
+  .customHeader-content-mobile {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    position: static !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 15px 0 !important;
+  }
+  
+  .customheader-logo-mobile {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  
+  .customheader-logo-mobile img {
+    max-width: 200px !important;
+    height: auto !important;
+  }
+  
+  /* Прибираємо absolute позиціонування, якщо воно є */
+  #shopify-section-sections--25095175471414__cdv_custom_header_84G98B {
+    position: static !important;
+  }
+  
+  /* Переконаємося, що плашка не перекриває хедер */
+  .new-annoucement-bar-section {
+    position: static !important;
+  }
+}
+
