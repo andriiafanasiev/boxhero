@@ -645,7 +645,19 @@ class LocalCart {
             const titleParts = [];
 
             if (packageVariant) {
-                titleParts.push(packageVariant);
+                // Змінюємо назви для відображення
+                if (packageVariant === 'упаковка з 5') {
+                    titleParts.push('упаковка з 6');
+                } else if (
+                    packageVariant ===
+                    'набір із 5 + ОТРИМАЙТЕ 5 додаткових безкоштовних пар'
+                ) {
+                    titleParts.push(
+                        'набір із 6 + ОТРИМАЙТЕ 6 додаткових безкоштовних пар'
+                    );
+                } else {
+                    titleParts.push(packageVariant);
+                }
             }
 
             if (size) {
@@ -688,28 +700,8 @@ class LocalCart {
             let finalImage = productData.image;
 
             if (packageVariant === 'упаковка з 5') {
-                // Фото для варіанту "упаковка з 5" - використовуємо формат з // на початку (як в JSON)
+                // Фото для варіанту "упаковка з 5" - використовуємо img/1.png
                 finalImage = 'img/1.png';
-                // Обробляємо шлях до зображення (як в extractProductData)
-                if (
-                    finalImage &&
-                    !finalImage.startsWith('http') &&
-                    !finalImage.startsWith('data:')
-                ) {
-                    if (finalImage.startsWith('//')) {
-                        finalImage = 'https:' + finalImage;
-                    } else if (finalImage.startsWith('/')) {
-                        finalImage = window.location.origin + finalImage;
-                    } else if (finalImage.startsWith('../')) {
-                        finalImage =
-                            window.location.origin +
-                            '/' +
-                            finalImage.replace('../', '');
-                    } else {
-                        // Для відносних шляхів (cdn/...) додаємо origin
-                        finalImage = window.location.origin + '/' + finalImage;
-                    }
-                }
                 console.log(
                     'LocalCart: Встановлено фото для "упаковка з 5":',
                     finalImage
@@ -718,8 +710,12 @@ class LocalCart {
                 packageVariant ===
                 'набір із 5 + ОТРИМАЙТЕ 5 додаткових безкоштовних пар'
             ) {
-                // Фото для варіанту "набір із 5+5" - залишаємо оригінальне
-                // Можна додати інше фото, якщо потрібно
+                // Фото для варіанту "набір із 5+5" - використовуємо img/2.webp
+                finalImage = 'img/2.webp';
+                console.log(
+                    'LocalCart: Встановлено фото для "набір із 5+5":',
+                    finalImage
+                );
             }
 
             // Перевіряємо, чи зображення встановлено правильно
@@ -796,6 +792,18 @@ class LocalCart {
                     'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
             }
 
+            // Формуємо правильну назву для packageVariant в selectedOptions
+            let displayPackageVariant = packageVariant;
+            if (packageVariant === 'упаковка з 5') {
+                displayPackageVariant = 'упаковка з 6';
+            } else if (
+                packageVariant ===
+                'набір із 5 + ОТРИМАЙТЕ 5 додаткових безкоштовних пар'
+            ) {
+                displayPackageVariant =
+                    'набір із 6 + ОТРИМАЙТЕ 6 додаткових безкоштовних пар';
+            }
+
             this.addItem({
                 ...productData,
                 title: finalTitle,
@@ -804,7 +812,7 @@ class LocalCart {
                 quantity,
                 selectedOptions: {
                     ...selectedOptions,
-                    packageVariant: packageVariant,
+                    packageVariant: displayPackageVariant,
                     size: size,
                     color: colorInfo,
                 },
