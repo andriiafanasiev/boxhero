@@ -782,13 +782,52 @@ class LocalCart {
     let image = '';
     let title = '';
 
+    // ПРІОРИТЕТ 0: Витягуємо ціну з елемента на сторінці (найточніше для гривень)
+    // Шукаємо елемент з основною ціною (не compare price)
+    const priceElement = document.querySelector('#p-price-gcm86FEEK0 .gp-price.gp-money');
+    if (priceElement) {
+      const priceText = priceElement.textContent.trim();
+      // Витягуємо число з тексту "1790 грн"
+      const priceMatch = priceText.match(/([\d\s]+)/);
+      if (priceMatch) {
+        const priceValue = parseFloat(priceMatch[1].replace(/\s/g, ''));
+        if (!isNaN(priceValue) && priceValue > 0) {
+          price = priceValue;
+          console.log('LocalCart: Ціна витягнута з елемента сторінки:', price);
+        }
+      }
+    }
+    
+    // Якщо не знайшли, шукаємо будь-який елемент з класом gp-price.gp-money
+    if (!price || price === 0) {
+      const anyPriceElement = document.querySelector('.gp-price.gp-money:not(.gp-product-compare-price)');
+      if (anyPriceElement) {
+        const priceText = anyPriceElement.textContent.trim();
+        const priceMatch = priceText.match(/([\d\s]+)/);
+        if (priceMatch) {
+          const priceValue = parseFloat(priceMatch[1].replace(/\s/g, ''));
+          if (!isNaN(priceValue) && priceValue > 0) {
+            price = priceValue;
+            console.log('LocalCart: Ціна витягнута з будь-якого елемента gp-price:', price);
+          }
+        }
+      }
+    }
+
     // ПРІОРИТЕТ 1: variantData з gp-атрибутів (найточніші дані)
-    if (variantData && variantData.id == variantId) {
+    // Використовуємо ціну з variantData тільки якщо не знайшли на сторінці
+    if (variantData && variantData.id == variantId && (!price || price === 0)) {
       // Ціна в variantData може бути в центах, тому ділимо на 100
       if (variantData.price) {
-        price = typeof variantData.price === 'number' ? (variantData.price / 100) : parseFloat(variantData.price) / 100;
-      } else {
-        price = 0;
+        const variantPrice = typeof variantData.price === 'number' ? (variantData.price / 100) : parseFloat(variantData.price) / 100;
+        // Використовуємо тільки якщо це не $39.99 (що було б помилкою)
+        if (variantPrice > 100) { // Якщо більше 100, то це вже в гривнях
+          price = variantPrice;
+        } else if (variantPrice > 0) {
+          // Якщо менше 100, можливо це в доларах, конвертуємо в гривні (приблизно *45)
+          price = variantPrice * 45;
+          console.log('LocalCart: Ціна з variantData конвертована з доларів:', price);
+        }
       }
       // Для зображення спробуємо знайти в productInfo або використаємо og:image
       if (productInfo && productInfo.featured_image) {
@@ -806,17 +845,27 @@ class LocalCart {
     }
 
     // ПРІОРИТЕТ 2: productInfo з variants
-    if (productInfo && productInfo.variants) {
+    // Використовуємо ціну з productInfo тільки якщо не знайшли на сторінці
+    if (productInfo && productInfo.variants && (!price || price === 0)) {
       variant = productInfo.variants.find(v => v.id == variantId);
       if (variant) {
-        if (!price || price === 0) {
-          // Ціна в variant.price може бути в центах
-          if (variant.price) {
-            price = typeof variant.price === 'number' ? (variant.price / 100) : parseFloat(variant.price) / 100;
-          } else if (productInfo.price) {
-            price = typeof productInfo.price === 'number' ? (productInfo.price / 100) : parseFloat(productInfo.price) / 100;
+        // Ціна в variant.price може бути в центах (3999 = $39.99)
+        if (variant.price) {
+          const variantPrice = typeof variant.price === 'number' ? (variant.price / 100) : parseFloat(variant.price) / 100;
+          // Якщо ціна менше 100, це в доларах, конвертуємо в гривні (приблизно *45)
+          if (variantPrice < 100) {
+            price = variantPrice * 45;
+            console.log('LocalCart: Ціна з variant конвертована з доларів:', price);
           } else {
-            price = 0;
+            price = variantPrice;
+          }
+        } else if (productInfo.price) {
+          const productPrice = typeof productInfo.price === 'number' ? (productInfo.price / 100) : parseFloat(productInfo.price) / 100;
+          if (productPrice < 100) {
+            price = productPrice * 45;
+            console.log('LocalCart: Ціна з productInfo конвертована з доларів:', price);
+          } else {
+            price = productPrice;
           }
         }
         if (!image) {
@@ -838,21 +887,38 @@ class LocalCart {
       }
       
       // Якщо не знайшли варіант, використовуємо базові дані товару
-      if (!variant) {
-        if (!price) price = productInfo.price ? (productInfo.price / 100) : 0;
+      if (!variant && (!price || price === 0)) {
+        if (productInfo.price) {
+          const productPrice = typeof productInfo.price === 'number' ? (productInfo.price / 100) : parseFloat(productInfo.price) / 100;
+          if (productPrice < 100) {
+            price = productPrice * 45;
+            console.log('LocalCart: Ціна з productInfo (без variant) конвертована з доларів:', price);
+          } else {
+            price = productPrice;
+          }
+        }
         if (!image) image = productInfo.featured_image || productInfo.images?.[0] || '';
         if (!title) title = productInfo.title || '';
       }
     }
 
     // ПРІОРИТЕТ 3: Мета-теги (fallback)
-    if (!price && ogPrice) price = parseFloat(ogPrice.content);
+    if ((!price || price === 0) && ogPrice) {
+      const ogPriceValue = parseFloat(ogPrice.content);
+      // Якщо ціна з мета-тегів менше 100, це в доларах
+      if (ogPriceValue < 100) {
+        price = ogPriceValue * 45;
+        console.log('LocalCart: Ціна з og:price конвертована з доларів:', price);
+      } else {
+        price = ogPriceValue;
+      }
+    }
     if (!image && ogImage) image = ogImage.content;
     if (!title && ogTitle) title = ogTitle.content;
 
     // Фінальний fallback
     if (!title) title = 'Товар';
-    if (!price) price = 0;
+    if (!price || price === 0) price = 0;
     
     const handle = productInfo?.handle || 
                    window.location.pathname.split('/').pop()?.replace('.html', '') || '';
