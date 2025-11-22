@@ -1762,6 +1762,12 @@ class LocalCart {
         // Завжди показуємо форму, навіть якщо кошик порожній (товар додається перед викликом)
         // if (this.cart.length === 0) return;
 
+        // Перевіряємо, чи вже є відкрита форма
+        const existingModal = document.getElementById('checkout-form-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
         const formModal = document.createElement('div');
         formModal.id = 'checkout-form-modal';
         formModal.innerHTML = `
@@ -1807,6 +1813,7 @@ class LocalCart {
                 this.handleCheckout(formModal);
             });
 
+        // Відкриваємо форму
         setTimeout(() => {
             formModal.classList.add('active');
             document.body.style.overflow = 'hidden';
