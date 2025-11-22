@@ -784,7 +784,12 @@ class LocalCart {
 
     // ПРІОРИТЕТ 1: variantData з gp-атрибутів (найточніші дані)
     if (variantData && variantData.id == variantId) {
-      price = variantData.price ? (variantData.price / 100) : 0;
+      // Ціна в variantData може бути в центах, тому ділимо на 100
+      if (variantData.price) {
+        price = typeof variantData.price === 'number' ? (variantData.price / 100) : parseFloat(variantData.price) / 100;
+      } else {
+        price = 0;
+      }
       // Для зображення спробуємо знайти в productInfo або використаємо og:image
       if (productInfo && productInfo.featured_image) {
         image = productInfo.featured_image;
@@ -804,7 +809,16 @@ class LocalCart {
     if (productInfo && productInfo.variants) {
       variant = productInfo.variants.find(v => v.id == variantId);
       if (variant) {
-        if (!price) price = variant.price ? (variant.price / 100) : (productInfo.price / 100);
+        if (!price || price === 0) {
+          // Ціна в variant.price може бути в центах
+          if (variant.price) {
+            price = typeof variant.price === 'number' ? (variant.price / 100) : parseFloat(variant.price) / 100;
+          } else if (productInfo.price) {
+            price = typeof productInfo.price === 'number' ? (productInfo.price / 100) : parseFloat(productInfo.price) / 100;
+          } else {
+            price = 0;
+          }
+        }
         if (!image) {
           image = variant.featured_image?.src || 
                   variant.featured_media?.preview_image?.src ||
