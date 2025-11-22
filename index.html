@@ -10647,6 +10647,40 @@
                                   <script
                                     src="https://assets.gemcommerce.com/assets-v2/gp-product-price-v7-5.js?v=1762836810316"
                                     defer="defer"></script>
+                                  <script>
+                                    // Повертаємо правильну ціну після завантаження скрипта
+                                    (function() {
+                                      function fixComparePrice() {
+                                        const comparePriceEl = document.querySelector('#p-price-g-zI_zKlC7 .gp-product-compare-price');
+                                        if (comparePriceEl && comparePriceEl.textContent.trim() !== '3580 грн') {
+                                          comparePriceEl.textContent = '3580 грн';
+                                        }
+                                      }
+                                      
+                                      // Перевіряємо одразу
+                                      fixComparePrice();
+                                      
+                                      // Перевіряємо після завантаження DOM
+                                      if (document.readyState === 'loading') {
+                                        document.addEventListener('DOMContentLoaded', fixComparePrice);
+                                      }
+                                      
+                                      // Перевіряємо після завантаження скрипта
+                                      setTimeout(fixComparePrice, 100);
+                                      setTimeout(fixComparePrice, 500);
+                                      setTimeout(fixComparePrice, 1000);
+                                      
+                                      // Спостерігаємо за змінами
+                                      const observer = new MutationObserver(function(mutations) {
+                                        fixComparePrice();
+                                      });
+                                      
+                                      const targetNode = document.querySelector('#p-price-g-zI_zKlC7');
+                                      if (targetNode) {
+                                        observer.observe(targetNode, { childList: true, subtree: true, characterData: true });
+                                      }
+                                    })();
+                                  </script>
 
                                 </div>
                                 <div data-same-height-display-contents style="--jc:center"
