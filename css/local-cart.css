@@ -452,69 +452,114 @@
   background: #001d5f;
 }
 
-/* Стилі для хедера на мобільних */
+/* Стилі для хедера - десктоп та мобільний */
 .customHeader-section {
   background-color: #FFFFFF !important;
   background: #FFFFFF !important;
-  opacity: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
   position: static !important;
+}
+
+.customHeader-section .container {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
 }
 
 .customHeader-inner {
   background-color: #FFFFFF !important;
   background: #FFFFFF !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
 }
 
-.customHeader-content-mobile {
+/* Десктопний хедер */
+.customHeader-content.desktop_view {
+  display: none !important;
+}
+
+.customheader-logo.desktop_view {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.customheader-logo.desktop_view img {
+  display: block !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  height: auto !important;
+  max-width: 180px !important;
+}
+
+/* Мобільний хедер */
+.customHeader-content-mobile.mobile_view {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
   background-color: #FFFFFF !important;
   background: #FFFFFF !important;
 }
 
+.customheader-logo-mobile {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.customheader-logo-mobile img {
+  display: block !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  height: auto !important;
+  max-width: 180px !important;
+}
+
+/* Медіа-запити */
 @media (max-width: 768px) {
   .customHeader-section {
     background-color: #FFFFFF !important;
     background: #FFFFFF !important;
-    opacity: 1 !important;
-    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   
   .customHeader-inner {
-    background-color: #FFFFFF !important;
-    background: #FFFFFF !important;
-    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   
-  .customHeader-content-mobile {
-    background-color: #FFFFFF !important;
-    background: #FFFFFF !important;
-    position: static !important;
+  .customheader-logo.desktop_view {
+    display: none !important;
+  }
+  
+  .customHeader-content-mobile.mobile_view {
     display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    padding: 15px 0 !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .customHeader-content-mobile.mobile_view {
+    display: none !important;
   }
   
-  .customheader-logo-mobile {
+  .customheader-logo.desktop_view {
     display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-  }
-  
-  .customheader-logo-mobile img {
-    max-width: 200px !important;
-    height: auto !important;
-  }
-  
-  /* Прибираємо absolute позиціонування, якщо воно є */
-  #shopify-section-sections--25095175471414__cdv_custom_header_84G98B {
-    position: static !important;
-  }
-  
-  /* Переконаємося, що плашка не перекриває хедер */
-  .new-annoucement-bar-section {
-    position: static !important;
   }
 }
 
