@@ -10649,32 +10649,32 @@
                                     defer="defer"></script>
                                   <script>
                                     // Повертаємо правильну ціну після завантаження скрипта
-                                    (function() {
+                                    (function () {
                                       function fixComparePrice() {
                                         const comparePriceEl = document.querySelector('#p-price-g-zI_zKlC7 .gp-product-compare-price');
                                         if (comparePriceEl && comparePriceEl.textContent.trim() !== '3580 грн') {
                                           comparePriceEl.textContent = '3580 грн';
                                         }
                                       }
-                                      
+
                                       // Перевіряємо одразу
                                       fixComparePrice();
-                                      
+
                                       // Перевіряємо після завантаження DOM
                                       if (document.readyState === 'loading') {
                                         document.addEventListener('DOMContentLoaded', fixComparePrice);
                                       }
-                                      
+
                                       // Перевіряємо після завантаження скрипта
                                       setTimeout(fixComparePrice, 100);
                                       setTimeout(fixComparePrice, 500);
                                       setTimeout(fixComparePrice, 1000);
-                                      
+
                                       // Спостерігаємо за змінами
-                                      const observer = new MutationObserver(function(mutations) {
+                                      const observer = new MutationObserver(function (mutations) {
                                         fixComparePrice();
                                       });
-                                      
+
                                       const targetNode = document.querySelector('#p-price-g-zI_zKlC7');
                                       if (targetNode) {
                                         observer.observe(targetNode, { childList: true, subtree: true, characterData: true });
@@ -13702,8 +13702,7 @@
                       <div role="presentation" data-id="gPwUfDJ_Nv"
                         style="--bs:none;--bw:1px 1px 1px 1px;--bc:#121212;--shadow:none;--d:block;--d-mobile:block;--d-tablet:block;--op:100%;--pageType:GP_PRODUCT;--bblr:5px;--bbrr:5px;--btlr:5px;--btrr:5px;--ta:center"
                         class="gp-group/image gp-relative force-publish-1763128260593 gp-flex-none gp-h-auto mobile:gp-flex-none mobile:gp-h-auto tablet:gp-flex-none tablet:gp-h-auto gPwUfDJ_Nv">
-                        <a href="premium-bamboo-boxers.html#gP250gYzm7" target="_self" title
-                          style="border-radius:inherit;--jc:center"
+                        <div onclick="openVideoDialog('gP250gYzm7')" style="border-radius:inherit;--jc:center;cursor:pointer"
                           class="gp-h-full gp-w-full gp-flex pointer-events-auto">
 
                           <picture style="border-radius:inherit" class="gp-contents">
@@ -13727,7 +13726,7 @@
 
                           </picture>
 
-                        </a>
+                        </div>
                       </div>
 
                     </div>
@@ -13737,8 +13736,7 @@
                       <div role="presentation" data-id="g1HQKAhBfl"
                         style="--bs:none;--bw:1px 1px 1px 1px;--bc:#121212;--shadow:none;--d:block;--d-mobile:block;--d-tablet:block;--op:100%;--pageType:GP_PRODUCT;--bblr:5px;--bbrr:5px;--btlr:5px;--btrr:5px;--ta:center"
                         class="gp-group/image gp-relative force-publish-1763128260593 gp-flex-none gp-h-auto mobile:gp-flex-none mobile:gp-h-auto tablet:gp-flex-none tablet:gp-h-auto g1HQKAhBfl">
-                        <a href="premium-bamboo-boxers.html#g8W9UeHOrk" target="_self" title
-                          style="border-radius:inherit;--jc:center"
+                        <div onclick="openVideoDialog('g8W9UeHOrk')" style="border-radius:inherit;--jc:center;cursor:pointer"
                           class="gp-h-full gp-w-full gp-flex pointer-events-auto">
 
                           <picture style="border-radius:inherit" class="gp-contents">
@@ -13761,7 +13759,7 @@
 
                           </picture>
 
-                        </a>
+                        </div>
                       </div>
 
                     </div>
@@ -13771,8 +13769,7 @@
                       <div role="presentation" data-id="gvHUP46F2P"
                         style="--bs:none;--bw:1px 1px 1px 1px;--bc:#121212;--shadow:none;--d:block;--d-mobile:block;--d-tablet:block;--op:100%;--pageType:GP_PRODUCT;--bblr:5px;--bbrr:5px;--btlr:5px;--btrr:5px;--ta:center"
                         class="gp-group/image gp-relative force-publish-1763128260594 gp-flex-none gp-h-auto mobile:gp-flex-none mobile:gp-h-auto tablet:gp-flex-none tablet:gp-h-auto gvHUP46F2P">
-                        <a href="premium-bamboo-boxers.html#gyFFDEROYW" target="_self" title
-                          style="border-radius:inherit;--jc:center"
+                        <div onclick="openVideoDialog('gyFFDEROYW')" style="border-radius:inherit;--jc:center;cursor:pointer"
                           class="gp-h-full gp-w-full gp-flex pointer-events-auto">
 
                           <picture style="border-radius:inherit" class="gp-contents">
@@ -13796,13 +13793,24 @@
 
                           </picture>
 
-                        </a>
+                        </div>
                       </div>
 
                     </div>
 
 
                   </gp-row>
+                  <script>
+                    function openVideoDialog(dialogId) {
+                      const dialog = document.querySelector(`gp-dialog[data-id="${dialogId}"]`);
+                      if (dialog) {
+                        const dialogElement = dialog.querySelector('dialog');
+                        if (dialogElement) {
+                          dialogElement.showModal();
+                        }
+                      }
+                    }
+                  </script>
 
 
           </div>
