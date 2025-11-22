@@ -17,7 +17,7 @@ class LocalCart {
 
     saveCart() {
         localStorage.setItem(this.storageKey, JSON.stringify(this.cart));
-        this.updateCartUI();
+        // Прибрано updateCartUI() - кошик не використовується
         this.dispatchCartUpdate();
     }
 
@@ -96,7 +96,6 @@ class LocalCart {
         if (existingIndex > -1) {
             // Якщо знайшли ідентичний товар, збільшуємо кількість
             this.cart[existingIndex].quantity += product.quantity || 1;
-            this.showNotification('Кількість товару оновлено');
         } else {
             // Якщо не знайшли, додаємо новий товар
             this.cart.push({
@@ -106,10 +105,12 @@ class LocalCart {
                 quantity: product.quantity || 1,
                 id: Date.now() + Math.random(),
             });
-            this.showNotification('Товар додано до кошика');
         }
 
         this.saveCart();
+
+        // Оскільки кошик прибрано, одразу показуємо форму оформлення
+        this.showCheckoutForm();
     }
 
     removeItem(itemId) {
@@ -370,16 +371,15 @@ class LocalCart {
         window.addEventListener('storage', (e) => {
             if (e.key === this.storageKey) {
                 this.cart = this.loadCart();
-                this.updateCartUI();
+                // Прибрано updateCartUI() - кошик не використовується
             }
         });
 
         window.addEventListener('cartUpdated', () => {
-            this.updateCartUI();
+            // Прибрано updateCartUI() - кошик не використовується
         });
 
-        this.createCartUI();
-        this.updateCartUI();
+        // Прибрано createCartUI() та updateCartUI() - кошик не використовується
     }
 
     handleAddToCart(form) {
@@ -1740,256 +1740,7 @@ class LocalCart {
         });
     }
 
-    createCartUI() {
-        // Знаходимо існуючу іконку кошика в хедері
-        const existingCartIcon =
-            document.getElementById('cart-icon-bubble') ||
-            document.querySelector('.header__icon--cart') ||
-            document.querySelector('a[href*="/cart"]');
-
-        if (existingCartIcon) {
-            // Додаємо лічильник до існуючої іконки
-            let cartCount = existingCartIcon.querySelector('#cart-count');
-            if (!cartCount) {
-                cartCount = document.createElement('span');
-                cartCount.id = 'cart-count';
-                cartCount.className = 'cart-count-badge';
-                const currentPosition =
-                    window.getComputedStyle(existingCartIcon).position;
-                if (currentPosition === 'static') {
-                    existingCartIcon.style.position = 'relative';
-                }
-                existingCartIcon.appendChild(cartCount);
-            }
-
-            // Підключаємо обробник кліку - використовуємо capture для раннього перехоплення
-            existingCartIcon.addEventListener(
-                'click',
-                (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                    this.toggleCart();
-                    return false;
-                },
-                true
-            );
-        } else {
-            // Якщо іконки немає, створюємо свою
-            const cartButton = document.createElement('div');
-            cartButton.id = 'local-cart-button';
-            cartButton.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </svg>
-        <span id="cart-count" class="cart-count-badge">0</span>
-      `;
-            cartButton.addEventListener('click', () => this.toggleCart());
-            document.body.appendChild(cartButton);
-        }
-
-        // Створюємо модальне вікно кошика
-        const cartModal = document.createElement('div');
-        cartModal.id = 'local-cart-modal';
-        cartModal.innerHTML = `
-      <div class="cart-overlay"></div>
-      <div class="cart-content">
-        <div class="cart-header">
-          <h2>Ваш кошик</h2>
-          <button class="cart-close">&times;</button>
-        </div>
-        <div class="cart-items" id="cart-items"></div>
-        <div class="cart-footer">
-          <div class="cart-total">
-            <strong>Разом: <span id="cart-total">0 грн.</span></strong>
-          </div>
-          <button class="cart-checkout-btn" id="checkout-btn">Замовити</button>
-        </div>
-      </div>
-    `;
-        document.body.appendChild(cartModal);
-
-        // Обробники подій
-        cartModal
-            .querySelector('.cart-close')
-            .addEventListener('click', () => this.toggleCart());
-        cartModal
-            .querySelector('.cart-overlay')
-            .addEventListener('click', () => this.toggleCart());
-        const checkoutBtn = document.getElementById('checkout-btn');
-        if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', () =>
-                this.showCheckoutForm()
-            );
-        }
-    }
-
-    updateCartUI() {
-        const count = this.getTotalItems();
-        const countEl = document.getElementById('cart-count');
-        if (countEl) {
-            countEl.textContent = count;
-            if (countEl.classList.contains('cart-count-badge')) {
-                countEl.style.display = count > 0 ? 'flex' : 'none';
-                // Завжди робимо круглим для одно- та двозначних чисел
-                if (count > 99) {
-                    // Тільки для чисел > 99 робимо трохи ширшим
-                    countEl.style.width = 'auto';
-                    countEl.style.minWidth = '24px';
-                    countEl.style.maxWidth = '28px';
-                    countEl.style.height = '20px';
-                    countEl.style.padding = '0 4px';
-                    countEl.style.borderRadius = '10px';
-                    countEl.style.lineHeight = '20px';
-                } else {
-                    // Для всіх інших - завжди круглий
-                    countEl.style.width = '20px';
-                    countEl.style.minWidth = '20px';
-                    countEl.style.maxWidth = '20px';
-                    countEl.style.height = '20px';
-                    countEl.style.padding = '0';
-                    countEl.style.borderRadius = '50%';
-                    countEl.style.lineHeight = '20px';
-                }
-            } else {
-                countEl.style.display = count > 0 ? 'block' : 'none';
-            }
-        }
-
-        const itemsEl = document.getElementById('cart-items');
-        if (itemsEl) {
-            // Завжди показуємо актуальний стан кошика
-            console.log(
-                'LocalCart: Оновлення кошика, товарів:',
-                this.cart.length
-            );
-            if (this.cart.length === 0) {
-                itemsEl.innerHTML =
-                    '<div style="text-align: center; padding: 60px 24px; color: #999;"><p style="font-size: 16px; margin: 0;">Ваш кошик порожній</p></div>';
-            } else {
-                itemsEl.innerHTML = this.cart
-                    .map((item) => {
-                        // Формуємо текст варіанту з обраних опцій
-                        let variantText = '';
-                        if (item.selectedOptions) {
-                            const parts = [];
-
-                            // Додаємо варіант упаковки
-                            if (item.selectedOptions.packageVariant) {
-                                parts.push(item.selectedOptions.packageVariant);
-                            }
-
-                            // Додаємо розмір
-                            if (item.selectedOptions.size) {
-                                parts.push(
-                                    `Розмір: ${item.selectedOptions.size}`
-                                );
-                            }
-
-                            // Додаємо колір
-                            if (item.selectedOptions.color) {
-                                parts.push(item.selectedOptions.color);
-                            }
-
-                            // Якщо немає спеціальних опцій, використовуємо стандартні
-                            if (parts.length === 0) {
-                                const optionsToShow = {
-                                    ...item.selectedOptions,
-                                };
-                                delete optionsToShow.public_title;
-                                delete optionsToShow.packageVariant;
-                                delete optionsToShow.size;
-                                delete optionsToShow.color;
-
-                                if (Object.keys(optionsToShow).length > 0) {
-                                    variantText = Object.values(optionsToShow)
-                                        .filter((v) => v && v !== '')
-                                        .join(' / ');
-                                } else if (item.selectedOptions.public_title) {
-                                    variantText =
-                                        item.selectedOptions.public_title;
-                                }
-                            } else {
-                                variantText = parts.join(' / ');
-                            }
-                        }
-
-                        return `
-          <div class="cart-item" data-id="${item.id}">
-            <img src="${item.image}" alt="${
-                            item.title
-                        }" class="cart-item-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjcwIiBoZWlnaHQ9IjcwIiBmaWxsPSIjZjVmNWY1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWl5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
-            <div class="cart-item-info">
-              <h4>${item.title}</h4>
-              ${
-                  variantText
-                      ? `<div class="cart-item-variant">${variantText}</div>`
-                      : ''
-              }
-              <p class="cart-item-price">${(item.price * item.quantity).toFixed(
-                  0
-              )} грн.</p>
-            </div>
-            <div class="cart-item-controls">
-              <div class="cart-item-qty-controls">
-                <button class="cart-qty-btn" onclick="localCart.updateQuantity(${
-                    item.id
-                }, ${item.quantity - 1})">-</button>
-                <span class="cart-qty">${item.quantity}</span>
-                <button class="cart-qty-btn" onclick="localCart.updateQuantity(${
-                    item.id
-                }, ${item.quantity + 1})">+</button>
-              </div>
-              <button class="cart-remove" onclick="localCart.removeItem(${
-                  item.id
-              })" title="Видалити">&times;</button>
-            </div>
-          </div>
-        `;
-                    })
-                    .join('');
-            }
-        }
-
-        const totalEl = document.getElementById('cart-total');
-        if (totalEl) {
-            totalEl.textContent = `${this.getTotal().toFixed(0)} грн.`;
-        }
-
-        // Приховуємо footer, якщо кошик порожній
-        const cartFooter = document.querySelector('.cart-footer');
-        if (cartFooter) {
-            cartFooter.style.display = this.cart.length > 0 ? 'block' : 'none';
-        }
-    }
-
-    toggleCart() {
-        const modal = document.getElementById('local-cart-modal');
-        if (!modal) {
-            console.error('LocalCart: Модальне вікно не знайдено');
-            return;
-        }
-
-        const isActive = modal.classList.contains('active');
-        if (isActive) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        } else {
-            // Оновлюємо кошик перед відкриттям - перезавантажуємо з localStorage
-            this.cart = this.loadCart();
-            this.updateCartUI();
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-
-            // Додатково оновлюємо через невелику затримку для надійності
-            setTimeout(() => {
-                this.cart = this.loadCart();
-                this.updateCartUI();
-            }, 100);
-        }
-    }
+    // Прибрано createCartUI() та updateCartUI() - кошик не використовується
 
     showNotification(message) {
         const notification = document.createElement('div');
@@ -2008,7 +1759,8 @@ class LocalCart {
     }
 
     showCheckoutForm() {
-        if (this.cart.length === 0) return;
+        // Завжди показуємо форму, навіть якщо кошик порожній (товар додається перед викликом)
+        // if (this.cart.length === 0) return;
 
         const formModal = document.createElement('div');
         formModal.id = 'checkout-form-modal';
@@ -2037,10 +1789,16 @@ class LocalCart {
         // Обробники
         formModal
             .querySelector('.checkout-close')
-            .addEventListener('click', () => formModal.remove());
+            .addEventListener('click', () => {
+                formModal.remove();
+                document.body.style.overflow = '';
+            });
         formModal
             .querySelector('.checkout-overlay')
-            .addEventListener('click', () => formModal.remove());
+            .addEventListener('click', () => {
+                formModal.remove();
+                document.body.style.overflow = '';
+            });
 
         formModal
             .querySelector('#checkout-form')
@@ -2049,7 +1807,10 @@ class LocalCart {
                 this.handleCheckout(formModal);
             });
 
-        setTimeout(() => formModal.classList.add('active'), 10);
+        setTimeout(() => {
+            formModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }, 10);
     }
 
     handleCheckout(formModal) {
@@ -2074,9 +1835,9 @@ class LocalCart {
         // Очищаємо кошик
         this.clear();
 
-        // Закриваємо модальні вікна
+        // Закриваємо модальне вікно
         formModal.remove();
-        this.toggleCart();
+        document.body.style.overflow = '';
 
         // Показуємо повідомлення про успіх
         this.showNotification('Замовлення успішно оформлено!');

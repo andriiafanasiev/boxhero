@@ -6464,18 +6464,6 @@
                   </div>
                 </div>
               </details>
-            </details-modal><a href="https://boxhero-us.com/cart"
-              class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
-              <svg class="icon icon-cart" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 35.53 44.83" style='transform: scale(0.9);'>
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                  d="M12.36,10.93l29.38-.08q.72,16.41,1.45,32.8H10.66Z" transform="translate(-9.16 -0.32)" />
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                  d="M19.39,10.85V9.52a7.7,7.7,0,1,1,15.39,0v1.33" transform="translate(-9.16 -0.32)" />
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                  d="M19.12,15.46a7.7,7.7,0,0,0,15.08,0" transform="translate(-9.16 -0.32)" />
-              </svg>
-              <span class="visually-hidden">Cart</span></a>
           </div>
         </div>
       </div>
@@ -12784,6 +12772,54 @@
                               const gQnpEDm3BQ = document.querySelector(".gsBS8TbNtS");
                               const g3avkS2mog = document.querySelector(".gsqGvqR-tL");
 
+                              // Функція для прокрутки слайдера до зображення
+                              function scrollToImage(imageSrc) {
+                                setTimeout(function () {
+                                  // Знаходимо всі зображення в слайдері (перевіряємо src та data-src)
+                                  const allImages = document.querySelectorAll('.gem-slider img');
+                                  let targetImage = null;
+
+                                  for (let img of allImages) {
+                                    const src = img.getAttribute('src') || '';
+                                    const dataSrc = img.getAttribute('data-src') || '';
+                                    if (src.includes(imageSrc) || dataSrc.includes(imageSrc)) {
+                                      targetImage = img;
+                                      break;
+                                    }
+                                  }
+
+                                  if (targetImage) {
+                                    // Знаходимо батьківський слайд
+                                    const slideItem = targetImage.closest('.gem-slider-item');
+                                    if (slideItem) {
+                                      // Знаходимо слайдер
+                                      const slider = slideItem.closest('.gem-slider');
+                                      if (slider) {
+                                        // Знаходимо індекс слайда
+                                        const slides = Array.from(slider.querySelectorAll('.gem-slider-item'));
+                                        const slideIndex = slides.indexOf(slideItem);
+
+                                        // Прокручуємо до слайда
+                                        if (slideIndex !== -1) {
+                                          // Якщо використовується keen-slider, використовуємо його API
+                                          if (slider.__keen) {
+                                            try {
+                                              slider.__keen.moveToIdx(slideIndex);
+                                            } catch (e) {
+                                              // Якщо API не доступний, використовуємо scrollIntoView
+                                              slideItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                                            }
+                                          } else {
+                                            // Для звичайного слайдера використовуємо scrollIntoView з центруванням
+                                            slideItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }, 200);
+                              }
+
                               setTimeout(function () {
                                 g3avkS2mog.click();
                               }, 5);
@@ -12839,6 +12875,9 @@
                     <circle cx="7.5" cy="7.5" r="7" fill="#C3C3C3" stroke="white"></circle>
                 </svg>`;
 
+                                // Прокручуємо слайдер до img/1.png
+                                scrollToImage('img/1.png');
+
                               });
 
                               g3avkS2mog.addEventListener("click", function (e) {
@@ -12890,6 +12929,9 @@
                 <svg data-id="531900718936753361" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
                     <circle cx="7.5" cy="7.5" r="7" fill="#C3C3C3" stroke="white"></circle>
                 </svg>`;
+
+                                // Прокручуємо слайдер до img/2.webp
+                                scrollToImage('img/2.webp');
 
                               });
 
@@ -13172,7 +13214,7 @@
                                 <span data-gp-text
                                   style="--ff:var(--g-font-Assistant, 'Assistant'), var(--g-font-body, body);--size:19px;--size-tablet:19px;--size-mobile:15px;--lh:130%;--lh-tablet:130%;--lh-mobile:130%;--ls:0px;--weight:bold;--ts:none;word-break:break-word"
                                   class="gp-content-product-button group-active/button:!gp-text-inherit gp-relative gp-flex gp-h-full gp-items-center gp-overflow-hidden gp-break-words group-data-[state=loading]:gp-invisible [&_p]:gp-whitespace-pre-line gp-text button-text">
-                                  ➜ ДОДАТИ ДО КОШИКА
+                                  Оформити замовлення
                                 </span>
                               </div>
 
@@ -17339,15 +17381,18 @@
                 <picture style="border-radius:inherit" class="gp-contents">
 
                   <source media="(max-width: 767px)"
-                    data-srcSet="https://boxhero.cdn/shop/files/HookGirlsAreCrazyAbout-ezgif.com-video-to-webp-converter_2.webp?v=1722990809&width=750"
-                    srcset="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTcyIiBoZWlnaHQ9IjcxNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDxkZWZzPgogICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImctNTcyLTcxNCI+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSIyMCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI1MCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI3MCUiIC8+CiAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8L2RlZnM+CiAgICA8cmVjdCB3aWR0aD0iNTcyIiBoZWlnaHQ9IjcxNCIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iNTcyIiBoZWlnaHQ9IjcxNCIgZmlsbD0idXJsKCNnLTU3Mi03MTQpIiAvPgogICAgPGFuaW1hdGUgeGxpbms6aHJlZj0iI3IiIGF0dHJpYnV0ZU5hbWU9IngiIGZyb209Ii01NzIiIHRvPSI1NzIiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAgLz4KICA8L3N2Zz4=" />
-                  <source media="(max-width: 1024px)" data-srcSet="https://placehold.co/980x1226?text=Image"
+                    data-srcSet="https://boxhero.co/cdn/shop/files/HookGirlsAreCrazyAbout-ezgif.com-video-to-webp-converter_2.webp?v=1722990809&width=750 1023w" />
+                  <source media="(max-width: 1024px)"
+                    data-srcSet="https://boxhero.co/cdn/shop/files/HookGirlsAreCrazyAbout-ezgif.com-video-to-webp-converter_2.webp?v=1722990809&width=750 1023w"
                     srcset="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTgwIiBoZWlnaHQ9IjEyMjYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZGVmcz4KICAgICAgPGxpbmVhckdyYWRpZW50IGlkPSJnLTk4MC0xMjI2Ij4KICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSJyZ2JhKDUxLCA1MSwgNTEsIDApIiBvZmZzZXQ9IjIwJSIgLz4KICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSJyZ2JhKDUxLCA1MSwgNTEsIDApIiBvZmZzZXQ9IjUwJSIgLz4KICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSJyZ2JhKDUxLCA1MSwgNTEsIDApIiBvZmZzZXQ9IjcwJSIgLz4KICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxyZWN0IHdpZHRoPSI5ODAiIGhlaWdodD0iMTIyNiIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iOTgwIiBoZWlnaHQ9IjEyMjYiIGZpbGw9InVybCgjZy05ODAtMTIyNikiIC8+CiAgICA8YW5pbWF0ZSB4bGluazpocmVmPSIjciIgYXR0cmlidXRlTmFtZT0ieCIgZnJvbT0iLTk4MCIgdG89Ijk4MCIgZHVyPSIxcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiICAvPgogIDwvc3ZnPg==" />
 
 
-                  <img base-src="https://placehold.co/980x1226?text=Image" quality-type="{}" quality-percent="{}"
-                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTgwIiBoZWlnaHQ9IjEyMjYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8ZGVmcz4KICAgICAgPGxpbmVhckdyYWRpZW50IGlkPSJnLTk4MC0xMjI2Ij4KICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSJyZ2JhKDUxLCA1MSwgNTEsIDApIiBvZmZzZXQ9IjIwJSIgLz4KICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSJyZ2JhKDUxLCA1MSwgNTEsIDApIiBvZmZzZXQ9IjUwJSIgLz4KICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSJyZ2JhKDUxLCA1MSwgNTEsIDApIiBvZmZzZXQ9IjcwJSIgLz4KICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxyZWN0IHdpZHRoPSI5ODAiIGhlaWdodD0iMTIyNiIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iOTgwIiBoZWlnaHQ9IjEyMjYiIGZpbGw9InVybCgjZy05ODAtMTIyNikiIC8+CiAgICA8YW5pbWF0ZSB4bGluazpocmVmPSIjciIgYXR0cmlidXRlTmFtZT0ieCIgZnJvbT0iLTk4MCIgdG89Ijk4MCIgZHVyPSIxcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiICAvPgogIDwvc3ZnPg=="
-                    data-src="https://placehold.co/980x1226?text=Image" alt="" width="100%"
+                  <img
+                    base-src="https://boxhero.co/cdn/shop/files/HookGirlsAreCrazyAbout-ezgif.com-video-to-webp-converter_2.webp?v=1722990809&width=750 1023w"
+                    quality-type="{}" quality-percent="{}"
+                    src="https://boxhero.co/cdn/shop/files/HookGirlsAreCrazyAbout-ezgif.com-video-to-webp-converter_2.webp?v=1722990809&width=750 1023w"
+                    data-src="https://boxhero.co/cdn/shop/files/HookGirlsAreCrazyAbout-ezgif.com-video-to-webp-converter_2.webp?v=1722990809&width=750 1023w"
+                    alt="" width="100%"
                     style="--aspect:auto;--aspect-tablet:auto;--aspect-mobile:auto;--objf:cover;--w:490px;--w-tablet:490px;--w-mobile:490px;--h:auto;--h-tablet:auto;--h-mobile:auto"
                     class="gp-inline-block gp-w-full gp-max-w-full gp_lazyload gp_force_load" />
 
@@ -27876,107 +27921,6 @@
 
 
 
-      <gp-dialog data-id="gCpQJ6e_Li" class="gps-lazy " style="--d:contents;--d-tablet:contents;--d-mobile:contents"
-        data-gp-setting='{"dialogId":"gCpQJ6e_Li","trigger":"none","triggerTime":0,"frequency":3,"triggerPercentage":10,"mobileTrigger":"none","mobileTriggerTime":10,"closeOnClickOutside":true,"frequencyMode":"once","display":{"desktop":true,"mobile":true,"tablet":true}}'>
-        <dialog aria-label="Popup 1" data-gp-dialog-id="gCpQJ6e_Li" class="gp-dialog gp-bg-transparent gp-z-[999999]"
-          style="z-index:100001">
-          <div aria-label="Backdrop"
-            class="gp-fixed gp-inset-0 gp-z-50 gp-flex gp-overflow-y-auto gp-overflow-x-hidden gp-shadow-xl gp-items-center gp-justify-center"
-            style="--pe:auto;--pe-mobile:auto;--pe-tablet:auto">
-
-            <div data-gp-dialog-overlay class="gp-fixed gp-inset-0 gp-block gp-transition-all gp-duration-100"
-              style="--op:0.7;--bgc:#121212;--d:block;--d-mobile:block;--d-tablet:block" aria-hidden=true></div>
-
-            <span class="gp-inline-block gp-h-screen gp-align-middle"></span>
-            <div role="dialog" aria-label="Dialog content"
-              class="gp-relative gp-max-h-full gp-max-w-full gp-animate-[fadeIn_0.4s_ease-in] gp-overflow-hidden gp-shadow-xl"
-              style="--bs:solid;--bw:0px 0px 0px 0px;--bc:#121212;--bblr:0px;--bbrr:0px;--btlr:0px;--btrr:0px;--d:block;--d-mobile:block;--d-tablet:block;--w:620px;--w-tablet:620px;--w-mobile:315px;--h:Auto;--h-tablet:Auto;--h-mobile:Auto">
-              <button data-gp-dialog-close type="button" tabindex="-1"
-                class="gp-absolute gp-top-0 gp-right-0 gp-inline-flex gp-items-center gp-justify-center gp-outline-none focus-visible:gp-shadow-none focus-visible:gp-outline-none gp-overflow-hidden gp-z-1"
-                style="--w:1px;--h:1px;--c:#00000000;--bgc:#00000000">
-                <span style="--height-icon:1px" class="[&>svg]:!gp-w-auto [&>svg]:!gp-h-[var(--height-icon)]">
-                  <svg viewBox="0 0 12 12" fill="currentColor" style={svgContentStyle}>
-                    <path
-                      d="M7.1,6l4.5,4.5l-1.1,1.1L6,7.1l-4.5,4.5l-1.1-1.1L4.9,6L0.5,1.5l1.1-1.1L6,4.9l4.5-4.5l1.1,1.1L7.1,6z">
-                    </path>
-                  </svg>
-                </span>
-              </button>
-              <div aria-label="Dialog body"
-                style="--shadow:none;--op:100%;--pageType:GP_PRODUCT;--pt:0px;--pl:0px;--pb:0px;--pr:0px;--h:Auto;--h-tablet:Auto;--h-mobile:Auto;border-radius:inherit;--bgc:#FFFFFF;--bgi:url();--bgp:50% 50%;--bgs:cover;--bgr:no-repeat;--bga:scroll"
-                class="gp-h-full gp-w-full gp-overflow-y-auto gp-overflow-x-hidden !gp-max-h-screen">
-                <div>
-
-                  <div role="presentation" data-id="gF84YOkUG_"
-                    style="--bs:none;--bw:1px 1px 1px 1px;--bc:#121212;--shadow:none;--d:block;--d-mobile:none;--d-tablet:block;--op:100%;--pageType:GP_PRODUCT;--bblr:0px;--bbrr:0px;--btlr:0px;--btrr:0px;--ta:center"
-                    class="gp-group/image gp-relative force-publish-1763128170664 gp-flex-none gp-h-auto mobile:gp-flex-none mobile:gp-h-auto tablet:gp-flex-none tablet:gp-h-auto gF84YOkUG_">
-                    <div style="border-radius:inherit;--jc:center"
-                      class="gp-h-full gp-w-full gp-flex pointer-events-auto">
-
-                      <picture style="border-radius:inherit" class="gp-contents">
-
-                        <source media="(max-width: 767px)"
-                          data-srcSet="//boxhero-us.com/cdn/shop/files/image_21.png?v=629667956829120181"
-                          srcset="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDxkZWZzPgogICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImctOTM1LTU3MyI+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSIyMCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI1MCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI3MCUiIC8+CiAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8L2RlZnM+CiAgICA8cmVjdCB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgZmlsbD0idXJsKCNnLTkzNS01NzMpIiAvPgogICAgPGFuaW1hdGUgeGxpbms6aHJlZj0iI3IiIGF0dHJpYnV0ZU5hbWU9IngiIGZyb209Ii05MzUiIHRvPSI5MzUiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAgLz4KICA8L3N2Zz4=" />
-                        <source media="(max-width: 1024px)"
-                          data-srcSet="//boxhero-us.com/cdn/shop/files/image_21.png?v=629667956829120181"
-                          srcset="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDxkZWZzPgogICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImctOTM1LTU3MyI+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSIyMCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI1MCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI3MCUiIC8+CiAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8L2RlZnM+CiAgICA8cmVjdCB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgZmlsbD0idXJsKCNnLTkzNS01NzMpIiAvPgogICAgPGFuaW1hdGUgeGxpbms6aHJlZj0iI3IiIGF0dHJpYnV0ZU5hbWU9IngiIGZyb209Ii05MzUiIHRvPSI5MzUiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAgLz4KICA8L3N2Zz4=" />
-
-
-                        <img base-src="//boxhero-us.com/cdn/shop/files/image_21.png?v=629667956829120181"
-                          quality-type="{}" quality-percent="{}"
-                          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDxkZWZzPgogICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImctOTM1LTU3MyI+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSIyMCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI1MCUiIC8+CiAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0icmdiYSg1MSwgNTEsIDUxLCAwKSIgb2Zmc2V0PSI3MCUiIC8+CiAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8L2RlZnM+CiAgICA8cmVjdCB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iOTM1IiBoZWlnaHQ9IjU3MyIgZmlsbD0idXJsKCNnLTkzNS01NzMpIiAvPgogICAgPGFuaW1hdGUgeGxpbms6aHJlZj0iI3IiIGF0dHJpYnV0ZU5hbWU9IngiIGZyb209Ii05MzUiIHRvPSI5MzUiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAgLz4KICA8L3N2Zz4="
-                          data-src="//boxhero-us.com/cdn/shop/files/image_21.png?v=629667956829120181" alt=""
-                          width="100%"
-                          style="--aspect:auto;--aspect-tablet:auto;--aspect-mobile:auto;--objf:cover;--w:100%;--w-tablet:100%;--w-mobile:100%;--h:auto;--h-tablet:auto;--h-mobile:auto"
-                          class="gp-inline-block gp-w-full gp-max-w-full gp_lazyload gp_force_load" />
-
-                      </picture>
-
-                    </div>
-                  </div>
-
-                  <style id="custom-css-gF84YOkUG_">
-                    .gF84YOkUG_ img {
-                      border: none !important;
-                    }
-
-                    .gF84YOkUG_>figure>img {}
-                  </style>
-
-                  <div role="presentation" data-id="gtfib05VXP"
-                    style="--bs:none;--bw:1px 1px 1px 1px;--bc:#121212;--shadow:none;--d:none;--d-mobile:block;--d-tablet:none;--op:100%;--pageType:GP_PRODUCT;--bblr:0px;--bbrr:0px;--btlr:0px;--btrr:0px;--ta:center"
-                    class="gp-group/image gp-relative force-publish-1763128170665 gp-flex-none gp-h-auto mobile:gp-flex-none mobile:gp-h-auto tablet:gp-flex-none tablet:gp-h-auto gtfib05VXP">
-                    <div style="border-radius:inherit;--jc:center"
-                      class="gp-h-full gp-w-full gp-flex pointer-events-auto">
-
-                      <picture style="border-radius:inherit" class="gp-contents">
-
-                        <source media="(max-width: 767px)"
-                          data-srcSet="https://cdn.shopify.com/s/files/1/0880/9971/7430/files/Design_sans_titre_11_768x.webp"
-                          srcset="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTA4MCIgaGVpZ2h0PSIxOTIwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGRlZnM+CiAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZy0xMDgwLTE5MjAiPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iMjAlIiAvPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iNTAlIiAvPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iNzAlIiAvPgogICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPHJlY3Qgd2lkdGg9IjEwODAiIGhlaWdodD0iMTkyMCIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iMTA4MCIgaGVpZ2h0PSIxOTIwIiBmaWxsPSJ1cmwoI2ctMTA4MC0xOTIwKSIgLz4KICAgIDxhbmltYXRlIHhsaW5rOmhyZWY9IiNyIiBhdHRyaWJ1dGVOYW1lPSJ4IiBmcm9tPSItMTA4MCIgdG89IjEwODAiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAgLz4KICA8L3N2Zz4=" />
-                        <source media="(max-width: 1024px)" data-srcSet="https://placehold.co/1863x1143?text=Image"
-                          srcset="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTg2MyIgaGVpZ2h0PSIxMTQzIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGRlZnM+CiAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZy0xODYzLTExNDMiPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iMjAlIiAvPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iNTAlIiAvPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iNzAlIiAvPgogICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPHJlY3Qgd2lkdGg9IjE4NjMiIGhlaWdodD0iMTE0MyIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iMTg2MyIgaGVpZ2h0PSIxMTQzIiBmaWxsPSJ1cmwoI2ctMTg2My0xMTQzKSIgLz4KICAgIDxhbmltYXRlIHhsaW5rOmhyZWY9IiNyIiBhdHRyaWJ1dGVOYW1lPSJ4IiBmcm9tPSItMTg2MyIgdG89IjE4NjMiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAgLz4KICA8L3N2Zz4=" />
-
-
-                        <img base-src="https://placehold.co/1863x1143?text=Image" quality-type="{}" quality-percent="{}"
-                          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTg2MyIgaGVpZ2h0PSIxMTQzIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPGRlZnM+CiAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZy0xODYzLTExNDMiPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iMjAlIiAvPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iNTAlIiAvPgogICAgICAgIDxzdG9wIHN0b3AtY29sb3I9InJnYmEoNTEsIDUxLCA1MSwgMCkiIG9mZnNldD0iNzAlIiAvPgogICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPHJlY3Qgd2lkdGg9IjE4NjMiIGhlaWdodD0iMTE0MyIgZmlsbD0icmdiYSg1MSwgNTEsIDUxLCAwKSIgLz4KICAgIDxyZWN0IGlkPSJyIiB3aWR0aD0iMTg2MyIgaGVpZ2h0PSIxMTQzIiBmaWxsPSJ1cmwoI2ctMTg2My0xMTQzKSIgLz4KICAgIDxhbmltYXRlIHhsaW5rOmhyZWY9IiNyIiBhdHRyaWJ1dGVOYW1lPSJ4IiBmcm9tPSItMTg2MyIgdG89IjE4NjMiIGR1cj0iMXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAgLz4KICA8L3N2Zz4="
-                          data-src="https://placehold.co/1863x1143?text=Image" alt="" width="100%"
-                          style="--aspect:auto;--aspect-tablet:auto;--aspect-mobile:auto;--objf:cover;--w:100%;--w-tablet:100%;--w-mobile:100%;--h:auto;--h-tablet:auto;--h-mobile:auto"
-                          class="gp-inline-block gp-w-full gp-max-w-full gp_lazyload gp_force_load" />
-
-                      </picture>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </dialog>
-      </gp-dialog>
-      <script src="https://assets.gemcommerce.com/assets-v2/gp-dialog-v7-5.js?v=1762836810316" defer="defer"></script>
 
 
     </section>
